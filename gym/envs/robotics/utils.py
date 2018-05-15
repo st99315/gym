@@ -13,18 +13,21 @@ def robot_get_obs(sim):
     """
     if sim.data.qpos is not None and sim.model.joint_names:
         names = [n for n in sim.model.joint_names if n.startswith('robot')]
+        # print(names)
         return (
             np.array([sim.data.get_joint_qpos(name) for name in names]),
             np.array([sim.data.get_joint_qvel(name) for name in names]),
         )
     return np.zeros(0), np.zeros(0)
 
+# ['robot0:slide0', 'robot0:slide1', 'robot0:slide2', 'robot0:torso_lift_joint', 'robot0:head_pan_joint', 'robot0:head_tilt_joint', 'robot0:shoulder_pan_joint', 'robot0:shoulder_lift_joint', 'robot0:upperarm_roll_joint', 'robot0:elbow_flex_joint', 'robot0:forearm_roll_joint', 'robot0:wrist_flex_joint', 'robot0:wrist_roll_joint', 'robot0:r_gripper_finger_joint', 'robot0:l_gripper_finger_joint']
 
-def ctrl_set_action(sim, action):
+
+def ctrl_set_action(sim, action, all=False):
     """For torque actuators it copies the action into mujoco ctrl field.
     For position actuators it sets the target relative to the current qpos.
     """
-    if sim.model.nmocap > 0:
+    if sim.model.nmocap > 0 and not all:
         _, action = np.split(action, (sim.model.nmocap * 7, ))
     if sim.data.ctrl is not None:
         for i in range(action.shape[0]):

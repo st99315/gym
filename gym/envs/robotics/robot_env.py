@@ -21,6 +21,7 @@ class RobotEnv(gym.GoalEnv):
         if not os.path.exists(fullpath):
             raise IOError('File {} does not exist'.format(fullpath))
 
+        print('full path', fullpath)
         model = mujoco_py.load_model_from_path(fullpath)
         self.sim = mujoco_py.MjSim(model, nsubsteps=n_substeps)
         self.viewer = None
@@ -36,7 +37,9 @@ class RobotEnv(gym.GoalEnv):
 
         self.goal = self._sample_goal()
         obs = self._get_obs()
-        self.action_space = spaces.Box(-1., 1., shape=(n_actions,), dtype='float32')
+
+        action_val = 1. if n_actions == 4 else np.pi
+        self.action_space = spaces.Box(-action_val, action_val, shape=(n_actions,), dtype='float32')
         self.observation_space = spaces.Dict(dict(
             desired_goal=spaces.Box(-np.inf, np.inf, shape=obs['achieved_goal'].shape, dtype='float32'),
             achieved_goal=spaces.Box(-np.inf, np.inf, shape=obs['achieved_goal'].shape, dtype='float32'),
@@ -93,6 +96,8 @@ class RobotEnv(gym.GoalEnv):
             # window size used for old mujoco-py:
             width, height = 500, 500
             data = self._get_viewer().read_pixels(width, height, depth=False)
+            # data = self.sim.render(width=width, height=height, camera_name="gripper_camera_rgb", depth=False,
+            #    mode='offscreen', device_id=-1)
             # original image is upside-down, so flip it
             return data[::-1, :, :]
         elif mode == 'human':

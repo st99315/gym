@@ -4,7 +4,8 @@
 		<flag warmstart="enable" />
 	</option>
 
-	<include file="../shared_no_link.xml" />
+	<!-- <include file="../shared_no_link.xml" /> -->
+	<include file="../shared.xml" />
 	
 	<worldbody>
 		<geom condim="3" material="floor_mat" name="floor0" pos="0.8 0.75 0" size="0.85 0.7 1" type="plane" />
@@ -42,15 +43,15 @@
 	</asset>
 
 	<actuator>
-		<position ctrllimited="true" ctrlrange="0 0.2" joint="robot0:l_gripper_finger_joint" kp="30000" name="robot0:l_gripper_finger_joint" user="1" />
-		<position ctrllimited="true" ctrlrange="0 0.2" joint="robot0:r_gripper_finger_joint" kp="30000" name="robot0:r_gripper_finger_joint" user="1" />
+		<position ctrllimited="true" ctrlrange="0 0.2" joint="robot0:l_gripper_finger_joint" kp="30000" name="robot0:l_gripper_finger_joint" />
+		<position ctrllimited="true" ctrlrange="0 0.2" joint="robot0:r_gripper_finger_joint" kp="30000" name="robot0:r_gripper_finger_joint" />
 
-		<position ctrllimited="true" ctrlrange="-3.14 3.14" joint="robot0:shoulder_pan_joint"  kp="14000" name="robot0:shoulder_pan_joint"  />
-		<position ctrllimited="true" ctrlrange="-3.14 3.14" joint="robot0:shoulder_lift_joint" kp="14000" name="robot0:shoulder_lift_joint" />
-		<position ctrllimited="true" ctrlrange="-3.14 3.14" joint="robot0:upperarm_roll_joint" kp="12000"  name="robot0:upperarm_roll_joint" />
-		<position ctrllimited="true" ctrlrange="-3.14 3.14" joint="robot0:elbow_flex_joint"    kp="12000"  name="robot0:elbow_flex_joint"    />
-		<position ctrllimited="true" ctrlrange="-3.14 3.14" joint="robot0:forearm_roll_joint"  kp="12000"  name="robot0:forearm_roll_joint"  />
-		<position ctrllimited="true" ctrlrange="-3.14 3.14" joint="robot0:wrist_flex_joint"    kp="10000"  name="robot0:wrist_flex_joint"    />
-		<position ctrllimited="true" ctrlrange="-3.14 3.14" joint="robot0:wrist_roll_joint"    kp="10000"  name="robot0:wrist_roll_joint"    />
+		<position ctrllimited="true" ctrlrange="-3.14 3.14" joint="robot0:shoulder_pan_joint"  kp="8000" name="robot0:shoulder_pan_joint"  />
+		<position ctrllimited="true" ctrlrange="-3.14 3.14" joint="robot0:shoulder_lift_joint" kp="8000" name="robot0:shoulder_lift_joint" />
+		<position ctrllimited="true" ctrlrange="-3.14 3.14" joint="robot0:upperarm_roll_joint" kp="8000" name="robot0:upperarm_roll_joint" />
+		<position ctrllimited="true" ctrlrange="-3.14 3.14" joint="robot0:elbow_flex_joint"    kp="8000" name="robot0:elbow_flex_joint"    />
+		<position ctrllimited="true" ctrlrange="-3.14 3.14" joint="robot0:forearm_roll_joint"  kp="6000" name="robot0:forearm_roll_joint"  />
+		<position ctrllimited="true" ctrlrange="-3.14 3.14" joint="robot0:wrist_flex_joint"    kp="6000" name="robot0:wrist_flex_joint"    />
+		<position ctrllimited="true" ctrlrange="-3.14 3.14" joint="robot0:wrist_roll_joint"    kp="6000" name="robot0:wrist_roll_joint"    />
 	</actuator>
 </mujoco>
