@@ -3,18 +3,39 @@
         <texture type="skybox" builtin="gradient" rgb1="0.44 0.85 0.56" rgb2="0.46 0.87 0.58" width="32" height="32"></texture>
         <texture name="texture_block" file="block.png" gridsize="3 4" gridlayout=".U..LFRB.D.."></texture>
 
-        <material name="floor_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
-        <material name="table_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.93 0.93 0.93 1"></material>
-        <material name="block_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
-        <material name="puck_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
-        <material name="robot0:geomMat" shininess="0.03" specular="0.4"></material>
+		<texture builtin="flat" name="txtgeomMat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
+		<texture builtin="flat" name="txtgripper_finger_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
+		<texture builtin="flat" name="txtgripper_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
+		<texture builtin="flat" name="txtarm_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
+		<texture builtin="flat" name="txthead_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
+		<texture builtin="flat" name="txttorso_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
+		<texture builtin="flat" name="txtbase_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
+		<texture builtin="flat" name="txtfloor_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
+		<texture builtin="flat" name="txttable_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
+		<texture builtin="flat" name="txtblock_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
+		<texture builtin="flat" name="txtpuck_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
+
+        <material name="floor_mat" texture="txtfloor_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
+        <material name="table_mat" texture="txttable_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.93 0.93 0.93 1"></material>
+        <material name="block_mat" texture="txtblock_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
+        <material name="puck_mat" texture="txtpuck_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
+
+        <material name="robot0:geomMat" texture="txtgeomMat" shininess="0.03" specular="0.4"></material>
+        <material name="robot0:gripper_finger_mat" texture="txtgripper_finger_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:gripper_mat" texture="txtgripper_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:arm_mat" texture="txtarm_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:head_mat" texture="txthead_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:torso_mat" texture="txttorso_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:base_mat" texture="txtbase_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+
+        <!-- <material name="robot0:geomMat" shininess="0.03" specular="0.4"></material>
         <material name="robot0:gripper_finger_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
         <material name="robot0:gripper_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
         <material name="robot0:arm_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
         <material name="robot0:head_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
         <material name="robot0:torso_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
         <material name="robot0:base_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
-        
+         -->
         <mesh file="base_link_collision.stl" name="robot0:base_link"></mesh>
         <mesh file="bellows_link_collision.stl" name="robot0:bellows_link"></mesh>
         <mesh file="elbow_flex_link_collision.stl" name="robot0:elbow_flex_link"></mesh>
@@ -64,4 +85,8 @@
             </default>
         </default>
     </default>
+    
+    <!-- <worldbody>
+        <light diffuse="1 1 1" pos="3 0 3" dir="0 0 -1" />
+    </worldbody> -->
 </mujoco>

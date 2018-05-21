@@ -8,6 +8,8 @@ from gym.utils import seeding
 
 try:
     import mujoco_py
+    from mujoco_py.modder import TextureModder, LightModder
+
 except ImportError as e:
     raise error.DependencyNotInstalled("{}. (HINT: you need to install mujoco_py, and also perform the setup instructions here: https://github.com/openai/mujoco-py/.)".format(e))
 
@@ -24,6 +26,9 @@ class RobotEnv(gym.GoalEnv):
         print('full path', fullpath)
         model = mujoco_py.load_model_from_path(fullpath)
         self.sim = mujoco_py.MjSim(model, nsubsteps=n_substeps)
+        self.text_modder = TextureModder(self.sim)
+        self.ligh_modder = LightModder(self.sim)
+
         self.viewer = None
 
         self.metadata = {
@@ -71,15 +76,38 @@ class RobotEnv(gym.GoalEnv):
         reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
         return obs, reward, done, info
 
-    def reset(self):
+    def rand_texture(self):
+        for name in self.sim.model.geom_names:
+            if 'robot0:' not in name:
+                self.text_modder.rand_all(name)
+    
+    def set_light(self):
+        light_name = 'light0'
+        lightpos = np.random.randint(-3, 4, size=(2,))
+        lightpos = np.append(lightpos, 3)
+        lightdir = np.append(np.random.randint(-2, 1, size=()), np.random.randint(-2, 3, size=()))
+        lightdir = np.append(lightdir, -1)
+        self.ligh_modder.set_pos(light_name, lightpos)
+        self.ligh_modder.set_dir(light_name, lightdir)
+        self.ligh_modder.set_castshadow(light_name, True)
+        self.ligh_modder.set_ambient(light_name, [0.2, 0.2, 0.2])
+        self.ligh_modder.set_specular(light_name, [0.3, 0.3, 0.3])
+        self.ligh_modder.set_diffuse(light_name, [0.8, 0.8, 0.8])
+
+    def reset(self, object_pos=None, rand_text=False, rand_shadow=False):
         # Attempt to reset the simulator. Since we randomize initial conditions, it
         # is possible to get into a state with numerical issues (e.g. due to penetration or
         # Gimbel lock) or we may not achieve an initial condition (e.g. an object is within the hand).
         # In this case, we just keep randomizing until we eventually achieve a valid initial
         # configuration.
+        if rand_text:
+            self.rand_texture()
+        if rand_shadow:
+            self.set_light()
+            
         did_reset_sim = False
         while not did_reset_sim:
-            did_reset_sim = self._reset_sim()
+            did_reset_sim = self._reset_sim(object_pos)
         self.goal = self._sample_goal().copy()
         obs = self._get_obs()
         return obs
