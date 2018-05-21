@@ -1,5 +1,4 @@
 import numpy as np
-
 from gym.envs.robotics import rotations, robot_env, utils
 
 
@@ -124,8 +123,8 @@ class FetchEnv(robot_env.RobotEnv):
             'desired_goal': self.goal.copy(),
             'eeinfo': [grip_pos, rotations.mat2quat(self.sim.data.get_site_xmat('robot0:grip'))],
             'weneed': robot_qpos[6:-2],
-            'qpos': robot_qpos,
-            'qvel': robot_qvel,
+            'gripper_state': 1. if (gripper_state >= 0.048).all() else -1.,
+            'gripper_dense': gripper_state[0],
         }
 
     def _viewer_setup(self):
@@ -144,7 +143,7 @@ class FetchEnv(robot_env.RobotEnv):
         self.sim.model.site_pos[site_id] = self.goal - sites_offset[0]
         self.sim.forward()
 
-    def _reset_sim(self):
+    def _reset_sim(self, object_pos=None):
         self.sim.set_state(self.initial_state)
 
         # Randomize start position of object.
@@ -154,6 +153,9 @@ class FetchEnv(robot_env.RobotEnv):
                 object_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, self.obj_range, size=2)
             object_qpos = self.sim.data.get_joint_qpos('object0:joint')
             assert object_qpos.shape == (7,)
+            if object_pos is not None:
+                object_xpos = object_pos
+                print('load object pos')
             object_qpos[:2] = object_xpos
             self.sim.data.set_joint_qpos('object0:joint', object_qpos)
 
@@ -193,6 +195,8 @@ class FetchEnv(robot_env.RobotEnv):
         # Move end effector into position.
         gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + self.sim.data.get_site_xpos('robot0:grip')
         gripper_rotation = np.array([1., 0., 1., 0.])
+        # open gripper
+        self._set_action(np.array([0., 0., 0., 1.]))
         self.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
         self.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
         for _ in range(10):
