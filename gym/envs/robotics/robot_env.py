@@ -79,15 +79,20 @@ class RobotEnv(gym.GoalEnv):
     def rand_texture(self):
         for name in self.sim.model.geom_names:
             if 'robot0:' not in name:
-                rand_text = (self.text_modder.rand_rgb
-                    if name == 'object0' else self.text_modder.rand_all)
-                rand_text(name)
+                if name == 'object0':
+                    # random red
+                    self.text_modder.rand_rgb(name, rgb=(1, 0, 0))
+                else:
+                    self.text_modder.rand_all(name)
     
     def set_light(self):
         light_name = 'light0'
-        x, y, z = np.random.randint(0, 4, size=()), np.random.randint(-3, 4, size=()), 3
-        lightpos = np.array([x, y, z])
-        lightdir = np.array([0., 0., -1])
+        arm_init_pos = np.array([1.425, .925, 0.])
+        x, y, z = 2., 2., 2.
+        lightpos = np.array([x, y, z]) + arm_init_pos
+        dir_y = np.random.normal(0., 0.333, size=())
+        lightdir = np.array([-1., dir_y, -.5])
+        # print(lightdir)
         self.ligh_modder.set_pos(light_name, lightpos)
         self.ligh_modder.set_dir(light_name, lightdir)
         self.ligh_modder.set_castshadow(light_name, True)
