@@ -168,6 +168,7 @@ class FetchEnv(robot_env.RobotEnv):
             object_qpos[:2] = distractor_xpos            
             self.sim.data.set_joint_qpos('distractor0:joint', object_qpos)
 
+        self.reset_endeffrctor()
         self.sim.forward()
         return True
 
@@ -186,6 +187,19 @@ class FetchEnv(robot_env.RobotEnv):
         d = goal_distance(achieved_goal, desired_goal)
         return (d < self.distance_threshold).astype(np.float32)
 
+    def reset_endeffrctor(self):
+        # open gripper
+        self._set_action(np.array([0., 0., 0., 1.]))
+        # Move end effector into position.
+        gripper_target = self.initial_gripper_xpos.copy()
+        gripper_target[:2] += np.random.normal(0., 0.07, size=(2,))
+        gripper_target[2]  += np.random.uniform(-0.05, 0.1, size=(1,))
+        gripper_rotation = np.array([1., 0., 1., 0.])
+        self.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
+        self.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
+        for _ in range(10):
+            self.sim.step()
+
     def _env_setup(self, initial_qpos):
         for name, value in initial_qpos.items():
             self.sim.data.set_joint_qpos(name, value)
@@ -195,8 +209,7 @@ class FetchEnv(robot_env.RobotEnv):
         # Move end effector into position.
         gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + self.sim.data.get_site_xpos('robot0:grip')
         gripper_rotation = np.array([1., 0., 1., 0.])
-        # open gripper
-        self._set_action(np.array([0., 0., 0., 1.]))
+
         self.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
         self.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
         for _ in range(10):

@@ -16,7 +16,7 @@
 		<texture builtin="flat" name="txtpuck_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
 
         <material name="floor_mat" texture="txtfloor_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
-        <material name="table_mat" texture="txttable_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.93 0.93 0.93 1"></material>
+        <material name="table_mat" texture="txttable_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.9 0.9 0.9 1"></material>
         <material name="block_mat" texture="txtblock_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
         <material name="puck_mat" texture="txtpuck_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
 
@@ -85,8 +85,10 @@
             </default>
         </default>
     </default>
-    
-    <!-- <worldbody>
-        <light diffuse="1 1 1" pos="3 0 3" dir="0 0 -1" />
-    </worldbody> -->
+
+    <visual>
+        <map znear="0.005"></map>
+        <quality shadowsize="2048" offsamples="10"></quality>
+    </visual>
+
 </mujoco>

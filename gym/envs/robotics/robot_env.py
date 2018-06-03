@@ -8,7 +8,7 @@ from gym.utils import seeding
 
 try:
     import mujoco_py
-    from mujoco_py.modder import TextureModder, LightModder
+    from mujoco_py.modder import TextureModder, LightModder, CameraModder
 
 except ImportError as e:
     raise error.DependencyNotInstalled("{}. (HINT: you need to install mujoco_py, and also perform the setup instructions here: https://github.com/openai/mujoco-py/.)".format(e))
@@ -28,6 +28,8 @@ class RobotEnv(gym.GoalEnv):
         self.sim = mujoco_py.MjSim(model, nsubsteps=n_substeps)
         self.text_modder = TextureModder(self.sim)
         self.ligh_modder = LightModder(self.sim)
+        self.came_modder = CameraModder(self.sim)
+        self.camera_init = self.came_modder.get_pos('external_camera_0').copy()
 
         self.viewer = None
 
@@ -84,23 +86,30 @@ class RobotEnv(gym.GoalEnv):
                     self.text_modder.rand_rgb(name, rgb=(1, 0, 0))
                 else:
                     self.text_modder.rand_all(name)
-    
+
     def set_light(self):
         light_name = 'light0'
-        arm_init_pos = np.array([1.425, .925, 0.])
-        x, y, z = 2., 2., 2.
+        arm_init_pos = np.array([1.425, 1.333, 0.])
+        x, y, z = 2., 0., 3.
         lightpos = np.array([x, y, z]) + arm_init_pos
-        dir_y = np.random.normal(0., 0.333, size=())
-        lightdir = np.array([-1., dir_y, -.5])
-        # print(lightdir)
+        # lightdir = np.append(np.random.normal(-0.4, 0.3, size=(1,)), np.random.normal(0., 0.3, size=(1,)))
+        # lightdir = np.append(lightdir, np.random.normal(-0.5, 0.15, size=(1,)))
+        lightdir = np.append(np.random.uniform(-.9, .1, size=(1,)), np.random.uniform(-.9, .9, size=(1,)))
+        lightdir = np.append(lightdir, np.random.uniform(-.9, 0., size=(1,)))
         self.ligh_modder.set_pos(light_name, lightpos)
         self.ligh_modder.set_dir(light_name, lightdir)
         self.ligh_modder.set_castshadow(light_name, True)
         self.ligh_modder.set_ambient(light_name, [0.2, 0.2, 0.2])
+        self.ligh_modder.set_diffuse(light_name, [0.7, 0.7, 0.7])
         self.ligh_modder.set_specular(light_name, [0.3, 0.3, 0.3])
-        self.ligh_modder.set_diffuse(light_name, [0.8, 0.8, 0.8])
 
-    def reset(self, object_pos=None, rand_text=False, rand_shadow=False):
+    def set_camera(self):
+        camera_name = 'external_camera_0'
+        y = np.random.normal(0., 0.05, size=(1,))
+        pos = np.array([0., y, 0.]) + self.camera_init
+        self.came_modder.set_pos(camera_name, pos)
+
+    def reset(self, object_pos=None, rand_text=False, rand_shadow=False, rand_cam=False):
         # Attempt to reset the simulator. Since we randomize initial conditions, it
         # is possible to get into a state with numerical issues (e.g. due to penetration or
         # Gimbel lock) or we may not achieve an initial condition (e.g. an object is within the hand).
@@ -110,6 +119,8 @@ class RobotEnv(gym.GoalEnv):
             self.rand_texture()
         if rand_shadow:
             self.set_light()
+        if rand_cam:
+            self.set_camera()
             
         did_reset_sim = False
         while not did_reset_sim:
