@@ -30,6 +30,13 @@
 			<geom size="0.025 0.025 0.025" type="sphere" condim="3" name="distractor0" material="distractor" mass="2"></geom>
 			<site name="distractor0" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
 		</body> 
+
+		<body name="goal0" pos="1.4 .9 0.4">
+			<joint name="goal0:joint" type="free" damping="0.001"></joint>
+			<geom name="goal0" size="0.05 0.05 0.0005" type="box" condim="3" material="goal_mat"></geom>
+			<!-- <site name="goal0" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site> -->
+		</body> 
+		
 	
 		<light directional="true" ambient="0.2 0.2 0.2" diffuse="0.8 0.8 0.8" specular="0.3 0.3 0.3" castshadow="false" pos="0 0 4" dir="0 0 -1" name="light0"></light>
 	</worldbody>

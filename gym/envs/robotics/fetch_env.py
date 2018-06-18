@@ -149,7 +149,8 @@ class FetchEnv(robot_env.RobotEnv):
         # Randomize start position of object.
         if self.has_object:
             object_xpos = self.initial_gripper_xpos[:2]
-            while np.linalg.norm(object_xpos - self.initial_gripper_xpos[:2]) < 0.1:
+            while (np.linalg.norm(object_xpos - self.initial_gripper_xpos[:2]) < 0.1
+                    or np.linalg.norm(object_xpos - self.goal[:2]) < 0.1):
                 object_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, self.obj_range, size=2)
             object_qpos = self.sim.data.get_joint_qpos('object0:joint')
             assert object_qpos.shape == (7,)
@@ -161,12 +162,18 @@ class FetchEnv(robot_env.RobotEnv):
 
             distractor_xpos = self.initial_gripper_xpos[:2]
             while (np.linalg.norm(distractor_xpos - self.initial_gripper_xpos[:2]) < 0.1
-                or np.linalg.norm(distractor_xpos - object_xpos) < 0.1):
+                    or np.linalg.norm(distractor_xpos - object_xpos)   < 0.1
+                    or np.linalg.norm(distractor_xpos - self.goal[:2]) < 0.1):
                 distractor_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, self.obj_range, size=2)
             object_qpos = self.sim.data.get_joint_qpos('distractor0:joint')
             assert object_qpos.shape == (7,)
             object_qpos[:2] = distractor_xpos            
             self.sim.data.set_joint_qpos('distractor0:joint', object_qpos)
+
+            object_qpos = self.sim.data.get_joint_qpos('goal0:joint')
+            assert object_qpos.shape == (7,)
+            object_qpos[:2] = self.goal[:2]
+            self.sim.data.set_joint_qpos('goal0:joint', object_qpos)
 
         self.reset_endeffrctor()
         self.sim.forward()

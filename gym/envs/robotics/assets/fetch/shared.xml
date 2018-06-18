@@ -14,7 +14,9 @@
 		<texture builtin="flat" name="txttable_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
 		<texture builtin="flat" name="txtblock_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
 		<texture builtin="flat" name="txtpuck_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
+		<texture builtin="flat" name="txtgoal_mat" height="32" width="32" rgb1="1 1 1" type="cube"></texture>
 
+        <material name="goal_mat" texture="txtgoal_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
         <material name="floor_mat" texture="txtfloor_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
         <material name="table_mat" texture="txttable_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.9 0.9 0.9 1"></material>
         <material name="block_mat" texture="txtblock_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
